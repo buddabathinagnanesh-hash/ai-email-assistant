@@ -3,7 +3,7 @@ import Sidebar from './components/Sidebar';
 import SearchBar from './components/SearchBar';
 import EmailCard from './components/EmailCard';
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_URL;
 
 const SkeletonCard = () => (
   <div className="glass-card p-6 rounded-2xl animate-pulse">
@@ -272,7 +272,7 @@ export default function App() {
     if (runningPipeline) return;
     setRunningPipeline(true);
     try {
-      console.log("Triggering pipeline at /run-pipeline...");
+      console.log("Calling:", `${API_BASE}/run-pipeline`);
       const response = await fetch(`${API_BASE}/run-pipeline`, { method: 'POST' });
       if (!response.ok) {
         throw new Error(`API failed with status ${response.status}`);
