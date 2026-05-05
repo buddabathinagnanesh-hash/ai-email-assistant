@@ -10,23 +10,32 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
+CLIENT_ID = os.environ.get("CLIENT_ID")
+CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
+
+print("CLIENT_ID:", CLIENT_ID)
+print("CLIENT_SECRET exists:", bool(CLIENT_SECRET))
+
+if not CLIENT_ID or not CLIENT_SECRET:
+    raise ValueError("Missing CLIENT_ID or CLIENT_SECRET")
+
 API_URL = os.environ.get("API_URL", "http://localhost:8000").rstrip("/")
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173").rstrip("/")
-REDIRECT_URI = f"{API_URL}/auth/callback"
+REDIRECT_URI = "https://ai-email-assistant-1-wn0u.onrender.com/auth/callback"
 
 def get_flow():
     return Flow.from_client_config(
         {
             "web": {
-                "client_id": os.environ.get("CLIENT_ID"),
-                "client_secret": os.environ.get("CLIENT_SECRET"),
+                "client_id": CLIENT_ID,
+                "client_secret": CLIENT_SECRET,
                 "redirect_uris": [REDIRECT_URI],
                 "auth_uri": "https://accounts.google.com/o/oauth2/auth",
                 "token_uri": "https://oauth2.googleapis.com/token",
             }
         },
         scopes=[
-            "https://www.googleapis.com/auth/calendar",
+            "https://www.googleapis.com/auth/calendar.events",
             "https://www.googleapis.com/auth/gmail.readonly"
         ]
     )
@@ -54,8 +63,8 @@ def auth_callback(code: str):
         # Fetch token using the code received from Google
         flow.fetch_token(code=code)
         
-        # Save credentials permanently
-        with open("token.json", "w") as f:
+        # Save credentials permanently to /tmp/token.json for Render compatibility
+        with open("/tmp/token.json", "w") as f:
             f.write(flow.credentials.to_json())
         
         return RedirectResponse(url=f"{FRONTEND_URL}?connected=1")

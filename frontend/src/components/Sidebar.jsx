@@ -3,7 +3,7 @@ import React from 'react';
 export default function Sidebar({ activeTab, setActiveTab, theme, toggleTheme }) {
   const handleConnectGoogle = () => {
     try {
-      const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const API_BASE = import.meta.env.VITE_API_URL;
       console.log("Redirecting to Google OAuth login...");
       window.location.href = `${API_BASE}/auth/login`;
     } catch (error) {

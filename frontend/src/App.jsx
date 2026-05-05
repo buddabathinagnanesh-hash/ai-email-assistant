@@ -24,7 +24,12 @@ const SkeletonCard = () => (
   </div>
 );
 
+console.log("API BASE:", API_BASE);
+
 export default function App() {
+  if (!API_BASE) {
+    alert("Backend not configured");
+  }
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('theme') || 'dark';

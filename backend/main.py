@@ -50,36 +50,26 @@ def validate_date(date_str):
 # ==============================
 # CONFIG
 # ==============================
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+SCOPES = [
+    'https://www.googleapis.com/auth/calendar.events',
+    'https://www.googleapis.com/auth/gmail.readonly'
+]
 
 # ==============================
 # AUTH
 # ==============================
 def authenticate():
     creds = None
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    if os.path.exists("/tmp/token.json"):
+        creds = Credentials.from_authorized_user_file("/tmp/token.json", SCOPES)
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
+            with open("/tmp/token.json", "w") as f:
+                f.write(creds.to_json())
         else:
-            flow = InstalledAppFlow.from_client_config(
-                {
-                    "installed": {
-                        "client_id": os.environ.get("CLIENT_ID"),
-                        "client_secret": os.environ.get("CLIENT_SECRET"),
-                        "redirect_uris": ["http://localhost"],
-                        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-                        "token_uri": "https://oauth2.googleapis.com/token",
-                    }
-                },
-                SCOPES
-            )
-            creds = flow.run_local_server(port=0)
-
-        with open("token.json", "w") as f:
-            f.write(creds.to_json())
+            raise ValueError("No valid OAuth token found in /tmp/token.json. Please login via frontend.")
 
     return build("gmail", "v1", credentials=creds)
 
@@ -149,15 +139,15 @@ def fetch_emails(service):
 # ==============================
 def create_calendar_event(email):
     """Automatically create a Google Calendar event from the email."""
-    if not os.path.exists("token.json"):
+    if not os.path.exists("/tmp/token.json"):
         print("  -> Skipping calendar: No OAuth token. Connect via frontend first.")
         return "Please login"
 
-    creds = Credentials.from_authorized_user_file("token.json", ["https://www.googleapis.com/auth/calendar"])
+    creds = Credentials.from_authorized_user_file("/tmp/token.json", SCOPES)
     
     if creds and creds.expired and creds.refresh_token:
         creds.refresh(Request())
-        with open("token.json", "w") as f:
+        with open("/tmp/token.json", "w") as f:
             f.write(creds.to_json())
 
     try:
