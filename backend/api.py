@@ -43,18 +43,21 @@ def start_scheduler():
 @app.get("/emails")
 def get_all_emails():
     """Fetch all processed emails from the database."""
+    print("Fetching all emails...")
     return db.get_all_emails()
 
 @app.get("/emails/{category}")
 def filter_emails_by_category(category: str):
     """Filter processed emails by a specific category."""
+    print(f"Filtering emails by category: {category}...")
     return db.filter_emails_by_category(category)
 
-@app.post("/run")
+@app.post("/run-pipeline")
 def trigger_pipeline():
     """
     Manually triggers the existing email processing pipeline synchronously.
     """
+    print("Manual pipeline trigger initiated via /run-pipeline")
     main.run_pipeline()
     return {"message": "Pipeline triggered successfully"}
 

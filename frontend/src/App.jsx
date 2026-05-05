@@ -240,6 +240,7 @@ export default function App() {
     setError(null);
     try {
       const url = filter === 'ALL' ? `${API_BASE}/emails` : `${API_BASE}/emails/${filter}`;
+      console.log(`Fetching dashboard data from: ${url}`);
       const [statsRes, emailsRes, todayRes, briefRes] = await Promise.all([
         fetch(`${API_BASE}/stats`),
         fetch(url),
@@ -271,10 +272,15 @@ export default function App() {
     if (runningPipeline) return;
     setRunningPipeline(true);
     try {
-      await fetch(`${API_BASE}/run`, { method: 'POST' });
+      console.log("Triggering pipeline at /run-pipeline...");
+      const response = await fetch(`${API_BASE}/run-pipeline`, { method: 'POST' });
+      if (!response.ok) {
+        throw new Error(`API failed with status ${response.status}`);
+      }
       await fetchData(true);
     } catch (err) {
-      console.error(err);
+      console.error("Pipeline API error:", err);
+      alert("Pipeline failed: " + err.message);
     } finally {
       setRunningPipeline(false);
     }

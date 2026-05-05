@@ -1,14 +1,11 @@
 import React from 'react';
 
 export default function Sidebar({ activeTab, setActiveTab, theme, toggleTheme }) {
-  const handleConnectGoogle = async () => {
+  const handleConnectGoogle = () => {
     try {
       const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
-      const response = await fetch(`${API_BASE}/auth/google`);
-      const data = await response.json();
-      if (data.auth_url) {
-        window.location.href = data.auth_url;
-      }
+      console.log("Redirecting to Google OAuth login...");
+      window.location.href = `${API_BASE}/auth/login`;
     } catch (error) {
       console.error('Error connecting to Google:', error);
     }

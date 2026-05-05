@@ -31,20 +31,22 @@ def get_flow():
         ]
     )
 
-@router.get("/google")
-def auth_google():
-    """Generate auth URL and return it as JSON."""
+@router.get("/login")
+def auth_login():
+    """Redirect user to Google OAuth login."""
+    print("OAuth login initiated...")
     flow = get_flow()
     flow.redirect_uri = REDIRECT_URI
     
     # We set code_challenge=None to explicitly disable PKCE so we can keep the flow stateless
     auth_url, _ = flow.authorization_url(prompt='consent', state='dummy_state', code_challenge=None)
     
-    return {"auth_url": auth_url}
+    return RedirectResponse(url=auth_url)
 
 @router.get("/callback")
 def auth_callback(code: str):
     """Receive code, exchange for token, store in memory, return success."""
+    print("OAuth callback received code:", code[:10] + "...")
     flow = get_flow()
     flow.redirect_uri = REDIRECT_URI
     
