@@ -3,7 +3,8 @@ import React from 'react';
 export default function Sidebar({ activeTab, setActiveTab, theme, toggleTheme }) {
   const handleConnectGoogle = async () => {
     try {
-      const response = await fetch('http://localhost:8000/auth/google');
+      const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const response = await fetch(`${API_BASE}/auth/google`);
       const data = await response.json();
       if (data.auth_url) {
         window.location.href = data.auth_url;

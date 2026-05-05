@@ -2,6 +2,9 @@ import os
 from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
 from google_auth_oauthlib.flow import Flow
+from dotenv import load_dotenv
+
+load_dotenv()
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
@@ -12,8 +15,16 @@ FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173").rstrip("/
 REDIRECT_URI = f"{API_URL}/auth/callback"
 
 def get_flow():
-    return Flow.from_client_secrets_file(
-        "credentials.json",
+    return Flow.from_client_config(
+        {
+            "web": {
+                "client_id": os.environ.get("CLIENT_ID"),
+                "client_secret": os.environ.get("CLIENT_SECRET"),
+                "redirect_uris": [REDIRECT_URI],
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+            }
+        },
         scopes=[
             "https://www.googleapis.com/auth/calendar",
             "https://www.googleapis.com/auth/gmail.readonly"

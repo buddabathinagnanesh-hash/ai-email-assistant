@@ -7,3 +7,5 @@ credentials.json
 token.json
 test_flow.py
 .env
+node_modules
+*.db

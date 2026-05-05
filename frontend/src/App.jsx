@@ -3,7 +3,7 @@ import Sidebar from './components/Sidebar';
 import SearchBar from './components/SearchBar';
 import EmailCard from './components/EmailCard';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const SkeletonCard = () => (
   <div className="glass-card p-6 rounded-2xl animate-pulse">

@@ -6,6 +6,10 @@ import time
 import threading
 import datetime
 from zoneinfo import ZoneInfo
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import main
 import db
 import ai

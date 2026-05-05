@@ -5,3 +5,4 @@ requests
 apscheduler
 fastapi
 uvicorn
+python-dotenv

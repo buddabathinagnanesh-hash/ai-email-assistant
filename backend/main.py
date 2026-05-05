@@ -6,6 +6,9 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from apscheduler.schedulers.blocking import BlockingScheduler
+from dotenv import load_dotenv
+
+load_dotenv()
 
 import db
 import ai
@@ -61,7 +64,18 @@ def authenticate():
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+            flow = InstalledAppFlow.from_client_config(
+                {
+                    "installed": {
+                        "client_id": os.environ.get("CLIENT_ID"),
+                        "client_secret": os.environ.get("CLIENT_SECRET"),
+                        "redirect_uris": ["http://localhost"],
+                        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                        "token_uri": "https://oauth2.googleapis.com/token",
+                    }
+                },
+                SCOPES
+            )
             creds = flow.run_local_server(port=0)
 
         with open("token.json", "w") as f:
