@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+  }
+  .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+  }
+
+  .glass-panel {
+    @apply backdrop-blur-md bg-white/70 dark:bg-white/5 border border-white/20 dark:border-white/10;
+  }
+
+  .glass-card {
+    @apply backdrop-blur-md bg-white/60 dark:bg-white/5 border border-white/20 dark:border-white/10 shadow-sm dark:shadow-none transition-all duration-300 ease-out;
+  }
+
+  .glass-input {
+    @apply backdrop-blur-md bg-white/50 dark:bg-white/5 border border-white/20 dark:border-white/10 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all duration-300;
+  }
+}
+
+/* Premium smooth scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+body {
+  @apply antialiased selection:bg-blue-500/30;
+}

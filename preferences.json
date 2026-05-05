@@ -1,0 +1,16 @@
+{
+  "interests": [
+    "reminder",
+    "introduction",
+    "master",
+    "robotics",
+    "object",
+    "deloitte",
+    "hiring"
+  ],
+  "ignore": [
+    "reminder",
+    "introduction",
+    "object"
+  ]
+}
