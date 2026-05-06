@@ -47,7 +47,8 @@ const EmailCard = React.memo(({ email, searchQuery, isSelected }) => {
     e.stopPropagation();
     setFeedbackStatus(type);
     try {
-      await fetch('http://127.0.0.1:8000/feedback', {
+      const API_BASE = import.meta.env.VITE_API_URL;
+      await fetch(`${API_BASE}/feedback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ subject: email.subject, feedback: type })
