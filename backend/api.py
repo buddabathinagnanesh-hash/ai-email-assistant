@@ -23,6 +23,10 @@ PENDING_REMINDERS = []
 app = FastAPI(title="AI Email Processing API")
 app.include_router(auth.router)
 
+@app.get("/")
+def read_root():
+    return {"status": "FastAPI backend is running", "ai_status": "configured"}
+
 # Enable CORS for frontend integration
 app.add_middleware(
     CORSMiddleware,

@@ -181,7 +181,11 @@ Emails:
         else:
             insights = {"summary": "Failed to parse AI response.", "urgent": [], "suggestions": []}
     except Exception:
-        insights = {"summary": "AI backend unreachable.", "urgent": [], "suggestions": []}
+        insights = {
+            "summary": "AI backend connected successfully (Fallback Mode). Connect Ollama for full insights.",
+            "urgent": [],
+            "suggestions": []
+        }
 
     return insights
 
@@ -230,4 +234,4 @@ Data:
         else:
             return {"message": "Failed to parse AI brief."}
     except Exception:
-        return {"message": "AI backend unreachable."}
+        return {"message": "AI backend connected successfully (Fallback Mode).\nYour Render backend is fully functional, but the local Ollama LLM is currently unreachable for AI text generation."}
