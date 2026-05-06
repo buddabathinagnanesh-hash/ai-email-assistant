@@ -1,5 +1,5 @@
 import os
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from fastapi.responses import RedirectResponse
 from google_auth_oauthlib.flow import Flow
 from dotenv import load_dotenv
@@ -20,7 +20,7 @@ if not CLIENT_ID or not CLIENT_SECRET:
     raise ValueError("Missing CLIENT_ID or CLIENT_SECRET")
 
 API_URL = os.environ.get("API_URL", "http://localhost:8000").rstrip("/")
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173").rstrip("/")
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "https://ai-email-assistant-w7yo.vercel.app").rstrip("/")
 REDIRECT_URI = "https://ai-email-assistant-1-wn0u.onrender.com/auth/callback"
 
 def get_flow():
@@ -53,8 +53,16 @@ def auth_login():
     return RedirectResponse(url=auth_url)
 
 @router.get("/callback")
-def auth_callback(code: str):
+def auth_callback(request: Request):
     """Receive code, exchange for token, store in memory, return success."""
+    code = request.query_params.get("code")
+    error = request.query_params.get("error")
+    
+    if error:
+        return {"error": f"Google returned error: {error}"}
+    if not code:
+        return {"error": "Missing code in callback request"}
+        
     print("OAuth callback received code:", code[:10] + "...")
     flow = get_flow()
     flow.redirect_uri = REDIRECT_URI
